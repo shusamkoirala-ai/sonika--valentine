@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>For Sonika 💖</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  background: linear-gradient(135deg,#ffd6e7,#ffe6f2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* card */
+.card {
+  background: white;
+  padding: 45px;
+  border-radius: 30px;
+  box-shadow: 0 15px 40px rgba(255,150,190,.4);
+  position: relative;
+}
+
+h1 {
+  color: #ff5fa2;
+}
+
+/* buttons */
+button {
+  padding: 14px 26px;
+  font-size: 18px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#yes {
+  background: #ff8fc4;
+  color: white;
+  position: relative;
+  z-index: 5;
+}
+
+.noBtn {
+  background: #eee;
+  position: absolute;
+}
+
+/* final message */
+#final {
+  display: none;
+  font-size: 60px;
+  font-weight: 900;
+  color: #ff3c95;
+  animation: pop .6s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(.3); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* hearts */
+.heart {
+  position: absolute;
+  font-size: 22px;
+  animation: float 5s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(110vh); }
+  to { transform: translateY(-10vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>Sonika… will you be my Valentine? 🥺💖</h1>
+  <button id="yes">YES 💕</button>
+  <button class="noBtn" id="no">No 🙄</button>
+</div>
+
+<div id="final">
+  💘 FINALLY SHUSAM IS LOVED BY SONIKA 💘
+</div>
+
+<script>
+const yes = document.getElementById("yes");
+const no = document.getElementById("no");
+const card = document.getElementById("card");
+const final = document.getElementById("final");
+
+let yesScale = 1;
+let chaosLevel = 0;
+
+/* ---------- NO RUNS AWAY LIKE CRAZY ---------- */
+
+function move(btn){
+  btn.style.left = Math.random()*(window.innerWidth-100)+"px";
+  btn.style.top  = Math.random()*(window.innerHeight-60)+"px";
+}
+
+function growYes(){
+  yesScale += 0.15;
+  yes.style.transform = `scale(${yesScale})`;
+
+  /* eventually fills screen */
+  if(yesScale > 6){
+    yes.style.position = "fixed";
+    yes.style.left = 0;
+    yes.style.top = 0;
+    yes.style.width = "100vw";
+    yes.style.height = "100vh";
+    yes.style.fontSize = "60px";
+    yes.innerText = "YES 💕 CLICK ME";
+  }
+}
+
+function chaos(){
+  chaosLevel++;
+
+  growYes();
+
+  // shrink + teleport
+  no.style.transform = `scale(${1 - chaosLevel*0.07})`;
+  move(no);
+
+  // duplicate extra fake buttons
+  if(chaosLevel < 7){
+    const fake = no.cloneNode(true);
+    fake.className = "noBtn";
+    fake.innerText = "Nope 😈";
+    document.body.appendChild(fake);
+    move(fake);
+    fake.addEventListener("mouseover", ()=>move(fake));
+  }
+}
+
+no.addEventListener("mouseover", chaos);
+no.addEventListener("click", chaos);
+
+/* ---------- YES CLICKED ---------- */
+
+yes.addEventListener("click", ()=>{
+  card.style.display="none";
+  final.style.display="block";
+  hearts();
+  confetti();
+});
+
+/* hearts */
+function hearts(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="💗";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+  },120);
+}
+
+/* confetti */
+function confetti(){
+  for(let i=0;i<250;i++){
+    const c=document.createElement("div");
+    c.style.position="absolute";
+    c.style.width="8px";
+    c.style.height="8px";
+    c.style.background=`hsl(${Math.random()*360},100%,75%)`;
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="-10px";
+    c.style.animation="fall 3s linear forwards";
+    document.body.appendChild(c);
+  }
+}
+
+const style=document.createElement("style");
+style.innerHTML="@keyframes fall{to{transform:translateY(110vh) rotate(720deg);}}";
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
